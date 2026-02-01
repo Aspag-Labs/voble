@@ -110,7 +110,7 @@ export function GameLobby({
               ) : (
                 <Loader2 className="w-3 h-3 animate-spin" />
               )}
-              Getting a Random Word (VRF)
+              Getting a Random Word
             </p>
             <p className="flex items-center gap-2">
               <Loader2 className="w-3 h-3 animate-spin" /> Preparing Game Board

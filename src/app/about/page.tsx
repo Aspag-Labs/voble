@@ -531,7 +531,7 @@ const sections = [
           {/* Devs Address*/}
           <div className="space-y-4">
             <h2 className="text-lg font-bold mb-3 flex items-center gap-2">Dev Address</h2>
-            <p className="text-sm">Receives trading fees for development and token buybacks.</p>
+            <p className="text-sm">Collects trading fees to cover development costs and fill prize pools.</p>
             <p className="font-mono text-sm text-primary bg-muted/30 p-2 rounded-lg border border-border/50 mt-4">
               TBD
             </p>
