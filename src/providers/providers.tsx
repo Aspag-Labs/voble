@@ -22,7 +22,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         appearance: {
           showWalletLoginFirst: true,
           walletChainType: 'solana-only',
-          walletList: ['detected_solana_wallets'],
+          walletList: ['phantom', 'backpack', 'detected_solana_wallets'],
         },
 
         externalWallets: { solana: { connectors: toSolanaWalletConnectors() } },
