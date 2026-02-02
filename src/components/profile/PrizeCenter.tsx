@@ -4,6 +4,16 @@ import { Loader2, Trophy, Gift, DollarSign } from 'lucide-react'
 import { useState } from 'react'
 import type { UnclaimedPrize, UnclaimedRaffle } from '@/hooks'
 
+// Helper to get rank display icon
+const getRankIcon = (rank: number) => {
+  switch (rank) {
+    case 1: return '🥇'
+    case 2: return '🥈'
+    case 3: return '🥉'
+    default: return null
+  }
+}
+
 interface PrizeCenterProps {
   claimablePrizes: UnclaimedPrize[]
   rafflePrizes: UnclaimedRaffle[]
@@ -104,35 +114,45 @@ export function PrizeCenter({
 
             {totalPrizes > 0 && (
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {claimablePrizes.map((prize) => (
-                  <div
-                    key={prize.address}
-                    className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 font-bold text-sm">
-                        #{prize.rank}
-                      </div>
-                      <div>
-                        <div className="text-base font-semibold text-green-700 dark:text-green-400">
-                          ${(prize.amount / 1_000_000).toFixed(2)}
-                        </div>
-                        <div className="text-xs text-green-600 dark:text-green-500">
-                          {prize.periodType.charAt(0).toUpperCase() + prize.periodType.slice(1)} • {prize.periodId}
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      size="sm"
-                      disabled={isClaiming}
-                      onClick={() => onClaimPrize(prize)}
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                {claimablePrizes.map((prize) => {
+                  const icon = getRankIcon(prize.rank)
+                  return (
+                    <div
+                      key={prize.address}
+                      className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900"
                     >
-                      {isClaiming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Gift className="h-4 w-4 mr-1" />}
-                      Claim
-                    </Button>
-                  </div>
-                ))}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#c7f284] text-white font-bold text-sm">
+                          {icon ? (
+                            <span className="text-xl">{icon}</span>
+                          ) : (
+                            <div className="flex flex-col items-center leading-none">
+                              <Trophy className="h-3.5 w-3.5 mb-0.5" />
+                              <span className="text-[10px]">#{prize.rank}</span>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="text-base font-semibold text-green-700 dark:text-green-400">
+                            ${(prize.amount / 1_000_000).toFixed(2)}
+                          </div>
+                          <div className="text-xs text-green-600 dark:text-green-500">
+                            {prize.periodType.charAt(0).toUpperCase() + prize.periodType.slice(1)} • {prize.periodId}
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        disabled={isClaiming}
+                        onClick={() => onClaimPrize(prize)}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        {isClaiming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Gift className="h-4 w-4 mr-1" />}
+                        Claim
+                      </Button>
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>

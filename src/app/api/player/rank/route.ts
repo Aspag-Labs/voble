@@ -39,7 +39,8 @@ export async function GET(request: NextRequest) {
       .gt('total_score', playerStats.total_score)
 
     const rank = (playersAbove || 0) + 1
-    const percentile = totalPlayers && totalPlayers > 0 ? Math.round((1 - (rank - 1) / totalPlayers) * 100) : 100
+    // Calculate what top tier the player is in (rank 1 of 100 = Top 1%, rank 50 of 100 = Top 50%)
+    const percentile = totalPlayers && totalPlayers > 0 ? Math.ceil((rank / totalPlayers) * 100) : 1
 
     return NextResponse.json({
       rank,

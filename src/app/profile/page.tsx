@@ -256,6 +256,7 @@ export default function ProfilePage() {
           rankData={rankData}
           winRate={winRate}
           currentStreak={currentStreak}
+          totalPrizeWinnings={profile?.totalPrizeWinnings}
         />
 
         {/* 2. Mobile Tabs Switcher - Hidden on Desktop */}

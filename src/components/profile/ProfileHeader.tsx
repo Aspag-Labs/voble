@@ -16,9 +16,10 @@ interface ProfileHeaderProps {
   }
   winRate: number
   currentStreak: number
+  totalPrizeWinnings?: bigint
 }
 
-export function ProfileHeader({ profile, walletAddress, rankData, winRate, currentStreak }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, walletAddress, rankData, winRate, currentStreak, totalPrizeWinnings }: ProfileHeaderProps) {
   const [copied, setCopied] = useState(false)
 
   const copyWallet = () => {
@@ -30,14 +31,19 @@ export function ProfileHeader({ profile, walletAddress, rankData, winRate, curre
   }
 
   const handleShare = () => {
+    // Format prize winnings if available
+    const prizeAmount = totalPrizeWinnings ? Number(totalPrizeWinnings) / 1_000_000 : 0
+    const prizeText = prizeAmount > 0 ? `💰 ${prizeAmount.toFixed(2)} USDC won\n` : ''
+
     const text =
-      `🎮 My Voble Stats!\n\n` +
+      `My @voblefun Stats!\n\n` +
       `👤 ${profile.username}\n` +
       `📊 ${profile.totalGamesPlayed} games | ${profile.gamesWon} wins\n` +
       `🎯 Win Rate: ${winRate}%\n` +
       `🔥 Streak: ${currentStreak}\n` +
       (rankData?.percentile ? `🏆 Top ${rankData.percentile}% of players\n` : '') +
-      `\nPlay now at voble.xyz`
+      prizeText +
+      `\nPlay now at voble.fun`
 
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
     window.open(twitterUrl, '_blank')

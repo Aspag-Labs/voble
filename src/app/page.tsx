@@ -90,20 +90,22 @@ export default function GamePage() {
   // Timer initialization is now handled by useGameMachine
 
   const shareSummary = useMemo(() => {
-    // Generate a simple visual representation (like Wordle shares)
-    const guessEmojis =
-      gameState.gameStatus === 'won'
-        ? '🟩'.repeat(gameState.guesses.length) + '⬜'.repeat(7 - gameState.guesses.length)
-        : '🟥🟥🟥🟥🟥🟥🟥'
+    // Generate a visual grid representation (like Wordle shares)
+    const attempts = gameState.gameStatus === 'won' ? gameState.guesses.length : 'X'
 
-    const base =
-      gameState.gameStatus === 'won'
-        ? `🎯 Voble ${gameState.guesses.length}/7 | ${gameState.score.toLocaleString()} pts\n\n${guessEmojis}\n\n💰 Play for real USDC prizes on @vobleFun!`
-        : `😤 Voble X/7\n\n${guessEmojis}\n\nThe word "${gameState.targetWord}" got me today!\n\n👉 Try your luck on @vobleFun`
+    // Create emoji row for each guess
+    const guessEmojis = gameState.guesses.length > 0
+      ? '🟩'.repeat(Math.min(gameState.guesses.length, 7))
+      : ''
 
-    // Use player's referral link if available, otherwise fallback to base URL
-    const shareLink = referralStats?.referralLink || 'https://voble.fun'
-    return `${base}\n\n${shareLink}`
+    // TODO: Re-enable referral link when ready
+    // const shareLink = referralStats?.referralLink || 'https://voble.fun'
+
+    if (gameState.gameStatus === 'won') {
+      return `Just solved today's puzzle in ${attempts} guesses! 🎯\n\n${guessEmojis} ${gameState.score.toLocaleString()} pts\n\nCan you beat my score on @voblefun?\nTry beta: devnet-test.voble.fun`
+    } else {
+      return `Today's word got me 😤\n\n"${gameState.targetWord}" was tough!\n\nThink you can solve it? @voblefun\nTry beta: devnet-test.voble.fun`
+    }
   }, [
     gameState.gameStatus,
     gameState.guesses.length,
