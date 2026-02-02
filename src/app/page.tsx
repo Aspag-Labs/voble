@@ -4,18 +4,17 @@ import { useState, useEffect, useMemo } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 import { useWallets } from '@privy-io/react-auth/solana'
 import {
-  useBuyTicket,
   useSubmitGuess,
   useCompleteGame,
   useFetchSession,
   useUserProfile,
+  useGameMachine,
   SessionData,
   LetterResult,
 } from '@/hooks'
 import { useReferralStats } from '@/hooks/use-referral-stats'
 import { getCurrentDayPeriodId } from '@/lib/periods'
 import { useInitializeSession } from '@/hooks/use-initialize-session'
-import { useRecoverTicket } from '@/hooks/use-recover-ticket'
 
 import { DEMO_WORDS } from '@/lib/demo-words'
 
@@ -42,16 +41,28 @@ export default function GamePage() {
   // Generate period ID (daily format: YYYY-MM-DD)
   const periodId = getCurrentDayPeriodId()
 
-  const { buyTicket, isLoading: isBuyingTicket, ticketPurchased, vrfCompleted } = useBuyTicket()
+  // State machine hook - replaces scattered boolean flags
+  const {
+    phase,
+    error: gameError,
+    startTime,
+    isStartingGame,
+    ticketPurchased,
+    vrfCompleted,
+    startGame,
+    setPhase,
+  } = useGameMachine(periodId)
 
   const { submitGuess: submitGuessToBlockchain } = useSubmitGuess()
   const { completeGame } = useCompleteGame()
   const { session, refetch: refetchSession } = useFetchSession(periodId)
   const { initializeSession, isLoading: isInitializing } = useInitializeSession()
 
-  const { profile, isLoading: isLoadingProfile, refetch: refetchProfile } = useUserProfile(wallet?.address)
+  const { profile, isLoading: isLoadingProfile } = useUserProfile(wallet?.address)
   const { data: referralStats } = useReferralStats()
-  const { recoverTicket, isRecovering } = useRecoverTicket()
+
+  // isRecovering derived from phase
+  const isRecovering = phase === 'recovering'
 
   const [gameState, setGameState] = useState<GameState>({
     grid: Array(7)
@@ -73,32 +84,10 @@ export default function GamePage() {
 
   const [keyboardState, setKeyboardState] = useState<Record<string, TileState>>({})
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [startTime, setStartTime] = useState<number>(0)
-  const [isStartingGame, setIsStartingGame] = useState(false)
-  const [buyTicketError, setBuyTicketError] = useState<string | null>(null)
   const [isProcessingResult, setIsProcessingResult] = useState(false)
-  const [purchaseFailed, setPurchaseFailed] = useState(false)
   const [isSessionCreated, setIsSessionCreated] = useState(false)
-  // Local flag to bypass stale React Query session data after ticket purchase
-  // This fixes the race condition where session?.isCurrentPeriod hasn't updated yet
-  const [sessionReady, setSessionReady] = useState(false)
 
-  // Initialize timer from localStorage or session
-  useEffect(() => {
-    const savedStartTime = localStorage.getItem(`voble_startTime_${periodId}`)
-    if (savedStartTime) {
-      setStartTime(parseInt(savedStartTime))
-    } else if (session?.timeMs) {
-      // If no local state but we have session time, approximate start time
-      const derivedStart = Date.now() - session.timeMs
-      setStartTime(derivedStart)
-      localStorage.setItem(`voble_startTime_${periodId}`, derivedStart.toString())
-    } else {
-      const now = Date.now()
-      setStartTime(now)
-      localStorage.setItem(`voble_startTime_${periodId}`, now.toString())
-    }
-  }, [periodId, session?.timeMs]) // Run once on mount or when session loads
+  // Timer initialization is now handled by useGameMachine
 
   const shareSummary = useMemo(() => {
     // Generate a simple visual representation (like Wordle shares)
@@ -205,9 +194,9 @@ export default function GamePage() {
     }
   }, [session?.completed, session?.isSolved, session?.targetWord, session?.score, gameState.gameStatus])
 
-  // Timer effect
+  // Timer effect - now uses phase from state machine
   useEffect(() => {
-    if (gameState.gameStatus === 'playing' && startTime > 0) {
+    if (phase === 'playing' && startTime > 0) {
       const timer = setInterval(() => {
         setGameState((prev) => ({
           ...prev,
@@ -216,52 +205,9 @@ export default function GamePage() {
       }, 1000)
       return () => clearInterval(timer)
     }
-  }, [gameState.gameStatus, startTime])
+  }, [phase, startTime])
 
-  // Auto-recovery: Detect if user has paid ticket but session wasn't reset
-  // This happens when buy_ticket succeeded but reset_session on TEE failed
-  const [recoveryAttempted, setRecoveryAttempted] = useState(false)
-
-  useEffect(() => {
-    const attemptRecovery = async () => {
-      // Only attempt once per page load
-      if (recoveryAttempted || isRecovering) return
-
-      // Conditions for auto-recovery:
-      // 1. Profile exists and has lastPaidPeriod === today
-      // 2. Session exists but is NOT for current period (reset never happened)
-      // 3. Not already starting a game
-      const hasPaidForToday = profile?.lastPaidPeriod === periodId
-      const sessionNeedsReset = sessionAccountExists && !sessionIsCurrentPeriod
-
-      if (hasPaidForToday && sessionNeedsReset && !isStartingGame) {
-        console.log('[Auto-Recovery] Recovering unused ticket...')
-        setRecoveryAttempted(true)
-
-        const result = await recoverTicket(periodId)
-
-        if (result.success) {
-          await new Promise(resolve => setTimeout(resolve, 2000))
-          await refetchSession()
-        } else {
-          console.error('[Auto-Recovery] Failed:', result.error)
-        }
-      }
-    }
-
-    attemptRecovery()
-  }, [
-    profile?.lastPaidPeriod,
-    periodId,
-    sessionAccountExists,
-    sessionIsCurrentPeriod,
-    isStartingGame,
-    recoveryAttempted,
-    isRecovering,
-    recoverTicket,
-    refetchSession,
-    session?.periodId
-  ])
+  // Auto-recovery is now handled by useGameMachine
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -269,12 +215,8 @@ export default function GamePage() {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  // Validate requirements before allowing gameplay:
-  // 1. Has valid ticket (paid and on-chain)
-  // 2. Session exists on-chain for current period
-  // 3. Purchase didn't fail (prevents showing game after cancelled tx)
-  // sessionReady bypasses stale sessionIsCurrentPeriod during the purchase->gameplay transition
-  const canPlayGame = (sessionIsCurrentPeriod || sessionReady) && !!session && !session.completed && session.guessesUsed < 7 && !purchaseFailed
+  // Simplified gameplay validation - uses phase from state machine
+  const canPlayGame = (phase === 'playing' || phase === 'submitting') && !!session && !session.completed && session.guessesUsed < 7
 
   const handleKeyPress = async (key: string) => {
     if (!canPlayGame || gameState.gameStatus !== 'playing') return
@@ -388,72 +330,28 @@ export default function GamePage() {
   }
 
   const handleBuyTicket = async () => {
-    setIsStartingGame(true)
-    setBuyTicketError(null) // Clear any previous error
-    setPurchaseFailed(false) // Reset failed state for new attempt
-    setSessionReady(false) // Reset session ready flag for new purchase
-    try {
-      const result = await buyTicket(periodId)
+    // Reset game state for new session
+    setGameState({
+      grid: Array(7)
+        .fill(null)
+        .map(() =>
+          Array(6)
+            .fill(null)
+            .map(() => ({ letter: '', state: 'empty' })),
+        ),
+      currentRow: 0,
+      currentCol: 0,
+      gameStatus: 'playing',
+      targetWord: '',
+      guesses: [],
+      score: 0,
+      timeElapsed: 0,
+      showResultModal: false,
+    })
+    setKeyboardState({})
 
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to buy ticket')
-      }
-
-      // Wait for ER to sync the account
-      await new Promise((resolve) => setTimeout(resolve, 3000))
-
-      // Reset game state for new session
-      setGameState({
-        grid: Array(7)
-          .fill(null)
-          .map(() =>
-            Array(6)
-              .fill(null)
-              .map(() => ({ letter: '', state: 'empty' })),
-          ),
-        currentRow: 0,
-        currentCol: 0,
-        gameStatus: 'playing',
-        targetWord: '',
-        guesses: [],
-        score: 0,
-        timeElapsed: 0,
-        showResultModal: false,
-      })
-      setKeyboardState({})
-
-      // Initialize new timer
-      const now = Date.now()
-      setStartTime(now)
-      localStorage.setItem(`voble_startTime_${periodId}`, now.toString())
-
-      // Poll session until it's ready for gameplay (max 3 attempts with backoff)
-      // This fixes a race condition where session data wasn't synced before UI rendered
-      const MAX_POLL_ATTEMPTS = 3
-      const INITIAL_DELAY_MS = 1000
-
-      for (let attempt = 1; attempt <= MAX_POLL_ATTEMPTS; attempt++) {
-        const { data: newSession } = await refetchSession()
-
-        if (newSession?.isCurrentPeriod && !newSession?.completed) {
-          setSessionReady(true)
-          break
-        }
-
-        if (attempt < MAX_POLL_ATTEMPTS) {
-          const delay = INITIAL_DELAY_MS * attempt
-          await new Promise(resolve => setTimeout(resolve, delay))
-        }
-      }
-
-      setIsStartingGame(false)
-    } catch (error: unknown) {
-      const err = error as Error & { message?: string }
-      console.error('❌ [handleBuyTicket] Error:', err)
-      setBuyTicketError(err.message || 'An error occurred. Please try again.')
-      setPurchaseFailed(true) // Mark purchase as failed to prevent game UI
-      setIsStartingGame(false)
-    }
+    // Delegate to state machine
+    await startGame()
   }
 
   const handleCompleteGame = async () => {
@@ -528,7 +426,7 @@ export default function GamePage() {
             {!isProcessingResult && !gameState.showResultModal && (
               <GameLobby
                 isStartingGame={isStartingGame}
-                isBuyingTicket={isBuyingTicket}
+                isBuyingTicket={phase === 'buying'}
                 ticketPurchased={ticketPurchased}
                 vrfCompleted={vrfCompleted}
                 // Show enter arena if not starting, and:
@@ -549,7 +447,7 @@ export default function GamePage() {
                   sessionIsCurrentPeriod && (!!session?.completed || (session?.guessesUsed ?? 0) >= 7)
                 }
                 onBuyTicket={handleBuyTicket}
-                error={buyTicketError}
+                error={gameError}
               />
             )}
 
