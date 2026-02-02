@@ -356,6 +356,7 @@ export default function GamePage() {
 
   const handleCompleteGame = async () => {
     setIsProcessingResult(true)
+    setPhase('completing')
     const result = await completeGame(periodId)
 
     if (result.success) {
@@ -374,6 +375,7 @@ export default function GamePage() {
           timeElapsed: Math.floor((updatedSession.timeMs || 0) / 1000),
           showResultModal: true,
         }))
+        setPhase('result')
       }
     } else {
       console.error('❌ Failed to complete game:', result.error)

@@ -180,29 +180,34 @@ export function useGameMachine(periodId: string): UseGameMachineReturn {
             // Phase 4: Syncing session
             transition('syncing')
 
-            // Wait for ER to sync
-            await new Promise(resolve => setTimeout(resolve, 3000))
-
-            // Poll for session ready
-            const MAX_POLL_ATTEMPTS = 5
+            // Poll for session ready with exponential backoff
+            const MAX_POLL_ATTEMPTS = 12
             let sessionReady = false
 
             for (let attempt = 1; attempt <= MAX_POLL_ATTEMPTS; attempt++) {
+                // Wait before polling (exponential backoff: 1s, 2s, 3s, 4s, 5s, 5s...)
+                const waitTime = Math.min(attempt * 1000, 5000)
+                await new Promise(resolve => setTimeout(resolve, waitTime))
+
                 const { data: newSession } = await refetchSession()
+
                 if (newSession?.isCurrentPeriod && !newSession?.completed) {
                     sessionReady = true
                     break
                 }
-                if (attempt < MAX_POLL_ATTEMPTS) {
-                    await new Promise(resolve => setTimeout(resolve, 1500 * attempt))
-                }
             }
 
+            // Only transition to playing if session is confirmed ready
             if (!sessionReady) {
-                console.warn('[GameMachine] Session polling timed out, proceeding anyway')
+                throw new Error('Game session failed to sync. Please refresh and try again.')
             }
 
-            // Phase 5: Playing - set timer and transition
+            // Ensure React Query cache is fully updated before transitioning
+            // This small delay allows the component to re-render with the updated session
+            await new Promise(resolve => setTimeout(resolve, 500))
+            await refetchSession()
+
+            // Phase 5: Playing - set timer and transition (only reached when session is ready)
             setStartTimeNow()
             transition('playing')
 
