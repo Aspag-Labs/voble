@@ -18,6 +18,8 @@ export { useClaim } from './use-claim'
 export { useTradeActivityPoints } from './use-trade-points'
 export { useCloseAccounts } from './use-close-accounts'
 export { useRecoverTicket } from './use-recover-ticket'
+export { useGameMachine } from './use-game-machine'
+export type { GamePhase, UseGameMachineReturn } from './use-game-machine'
 
 // Data fetching hooks (read operations)
 export { useFetchSession } from './use-fetch-session'

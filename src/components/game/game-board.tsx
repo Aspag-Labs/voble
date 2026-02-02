@@ -50,7 +50,9 @@ export function GameBoard({ gameState, keyboardState, formatTime, handleKeyPress
         <div className="flex items-center gap-3 px-6 py-3 bg-white dark:bg-zinc-800/80 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 backdrop-blur-sm transition-all duration-300 hover:shadow-md hover:scale-105">
           <Timer className={`w-5 h-5 text-indigo-500 ${gameState.gameStatus === 'playing' ? 'animate-pulse' : ''}`} />
           <span className="font-mono text-2xl font-bold tracking-wider text-zinc-700 dark:text-zinc-200">
-            {gameState.gameStatus === 'playing' ? formatTime(gameState.timeElapsed) : '0:00'}
+            {gameState.gameStatus === 'playing' || gameState.gameStatus === 'won' || gameState.gameStatus === 'lost'
+              ? formatTime(gameState.timeElapsed)
+              : '0:00'}
           </span>
         </div>
       </div>
