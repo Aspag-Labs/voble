@@ -43,7 +43,7 @@ export function MobileBottomNav() {
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0c16e6] backdrop-blur-xl rounded-t-2xl pb-safe border-t border-zinc-800">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl rounded-t-2xl pb-safe border-t border-border">
       <div className="grid grid-cols-5 h-20 px-1">
         {navItems.map(({ label, href, icon: Icon }) => {
           const active = isActive(href)
@@ -55,13 +55,13 @@ export function MobileBottomNav() {
           let textClasses = ''
 
           if (active) {
-            // Active state: orange/amber badge style (matching leaderboard prize)
-            containerClasses += ' border-2 border-[#e5713e] bg-[#e5713e]/10'
-            textClasses = 'text-[#f89e2d]'
+            // Active state: primary theme color
+            containerClasses += ' border-2 border-primary bg-primary/10'
+            textClasses = 'text-primary'
           } else {
             // Inactive state
             containerClasses += ' border-2 border-transparent'
-            textClasses = 'text-zinc-400 hover:text-white'
+            textClasses = 'text-muted-foreground hover:text-foreground'
           }
 
           return (

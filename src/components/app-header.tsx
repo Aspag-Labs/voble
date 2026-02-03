@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { BarChart3, Info, Dices } from 'lucide-react'
-import { ThemeToggle } from '@/components/theme-toggle'
 
 export function AppHeader({ links = [] }: { links: { label: string; path: string }[] }) {
   const pathname = usePathname()
@@ -15,10 +14,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
   }
 
   return (
-    <header
-      className="relative z-50 px-4 py-3 md:py-4 border-b border-slate-800"
-      style={{ backgroundColor: '#0e0e0e' }}
-    >
+    <header className="relative z-50 px-4 py-3 md:py-4 border-b border-border bg-card backdrop-blur-sm">
       <div className="mx-auto flex justify-between items-center">
         <div className="flex items-center gap-8">
           {/* Logo - Left */}
@@ -32,7 +28,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
                 className="h-14 w-14 md:h-16 md:w-16 rounded-full object-contain"
                 priority
               />
-              <span className="text-xs font-semibold text-gray-400 leading-none">BETA</span>
+              <span className="text-xs font-semibold text-muted-foreground leading-none">BETA</span>
             </div>
           </Link>
 
@@ -42,7 +38,8 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
               {links.map(({ label, path }) => (
                 <li key={path}>
                   <Link
-                    className={`text-white hover:text-gray-300 transition-colors ${isActive(path) ? 'text-gray-300' : ''}`}
+                    className={`text-foreground hover:text-muted-foreground transition-colors ${isActive(path) ? 'font-semibold' : ''
+                      }`}
                     href={path}
                   >
                     {label}
@@ -58,10 +55,10 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
           {/* About Icon (Desktop) */}
           <Link
             href="/about"
-            className="hidden md:block p-2 rounded-lg hover:bg-slate-800 transition-colors group relative"
+            className="hidden md:block p-2 rounded-lg hover:bg-muted transition-colors group relative"
           >
-            <Info className="h-5 w-5 text-gray-400 hover:text-white transition-colors" />
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+            <Info className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground border border-border text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
               About
             </div>
           </Link>
@@ -69,21 +66,20 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
           {/* Raffle Icon (Desktop) */}
           <Link
             href="/raffle"
-            className="hidden md:block p-2 rounded-lg hover:bg-slate-800 transition-colors group relative"
+            className="hidden md:block p-2 rounded-lg hover:bg-muted transition-colors group relative"
           >
-            <Dices className="h-5 w-5 text-amber-400 hover:text-amber-300 transition-colors" />
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+            <Dices className="h-5 w-5 text-amber-500 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 transition-colors" />
+            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground border border-border text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
               Raffle
             </div>
           </Link>
 
-          {/* Theme Toggle (Desktop & Mobile) */}
-          <ThemeToggle />
+
 
           {/* Stats Icon (Desktop & Mobile) */}
-          <Link href="/stats" className="p-2 rounded-lg hover:bg-slate-800 transition-colors group relative">
-            <BarChart3 className="h-5 w-5 text-gray-400 hover:text-white transition-colors" />
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+          <Link href="/stats" className="p-2 rounded-lg hover:bg-muted transition-colors group relative">
+            <BarChart3 className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground border border-border text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
               Stats
             </div>
           </Link>
