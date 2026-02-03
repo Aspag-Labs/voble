@@ -12,15 +12,15 @@ export default function RafflePage() {
     useLuckyDrawData()
 
   return (
-    <div className="min-h-screen bg-[#09090b] pb-24">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header Section */}
-      <div className="bg-[#22c55e]/10 border-b border-[#22c55e]/20">
+      <div className="bg-primary/10 border-b border-primary/20">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           {/* Badge */}
           <div className="flex justify-center mb-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/20">
-              <div className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-              <span className="text-xs font-bold text-[#22c55e] uppercase tracking-widest">Weekly Raffle</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-primary/10 border border-primary/20">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-bold text-primary uppercase tracking-widest">Weekly Raffle</span>
             </div>
           </div>
 
@@ -29,7 +29,7 @@ export default function RafflePage() {
             <p className="text-zinc-400 text-xs uppercase tracking-widest mb-2">
               Jackpot Prize
             </p>
-            <h1 className="text-5xl md:text-6xl font-black text-[#22c55e] tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-black text-primary tracking-tight">
               ${isLoading ? '...' : currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </h1>
           </div>
@@ -37,7 +37,7 @@ export default function RafflePage() {
           {/* Stats Row */}
           <div className="flex items-center justify-center gap-6 text-sm">
             <div className="flex items-center gap-2 text-zinc-400">
-              <Trophy className="w-4 h-4 text-[#22c55e]" />
+              <Trophy className="w-4 h-4 text-primary" />
               <span className="font-medium">{totalEligiblePlayers} eligible</span>
             </div>
             <div className="w-px h-4 bg-zinc-700" />
@@ -48,7 +48,7 @@ export default function RafflePage() {
             <button
               onClick={() => refetch()}
               disabled={isLoading}
-              className="p-1.5 rounded text-zinc-500 hover:text-[#22c55e] transition-colors disabled:opacity-50"
+              className="p-1.5 rounded text-zinc-500 hover:text-primary transition-colors disabled:opacity-50"
             >
               <RotateCw className={cn('w-3.5 h-3.5', isLoading && 'animate-spin')} />
             </button>
@@ -58,7 +58,7 @@ export default function RafflePage() {
 
       <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
         {/* Your Status Card */}
-        <div className="bg-white dark:bg-[#1a1a1a] rounded-2xl border border-amber-100 dark:border-amber-900/20 p-1 relative overflow-hidden">
+        <div className="bg-card rounded-2xl border border-amber-100 dark:border-amber-900/20 p-1 relative overflow-hidden">
           <div
             className={cn(
               'rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6',
@@ -91,7 +91,7 @@ export default function RafflePage() {
             {!isEligible && (
               <Button
                 onClick={() => router.push('/')}
-                className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white border-0 rounded-full px-6 w-full sm:w-auto"
+                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white border-0 rounded-full px-6 w-full sm:w-auto"
               >
                 Play Now <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -101,7 +101,7 @@ export default function RafflePage() {
 
         {/* How it Works - Simplified 2 Steps */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white dark:bg-[#1a1a1a] p-6 rounded-xl border border-zinc-100 dark:border-zinc-800 flex items-center gap-4">
+          <div className="bg-card p-6 rounded-xl border border-border flex items-center gap-4">
             <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-lg">
               1
             </div>
@@ -110,7 +110,7 @@ export default function RafflePage() {
               <p className="text-sm text-zinc-500 dark:text-zinc-400">Complete just 1 game to enter.</p>
             </div>
           </div>
-          <div className="bg-white dark:bg-[#1a1a1a] p-6 rounded-xl border border-zinc-100 dark:border-zinc-800 flex items-center gap-4">
+          <div className="bg-card p-6 rounded-xl border border-border flex items-center gap-4">
             <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-lg">
               2
             </div>
@@ -122,7 +122,7 @@ export default function RafflePage() {
         </div>
 
         {/* Hall of Fame / Recent Winners */}
-        <div className="bg-white dark:bg-[#1a1a1a] rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+        <div className="bg-card rounded-2xl border border-border overflow-hidden">
           <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-amber-500" />

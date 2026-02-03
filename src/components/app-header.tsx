@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { BarChart3, Info, Dices } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export function AppHeader({ links = [] }: { links: { label: string; path: string }[] }) {
   const pathname = usePathname()
@@ -75,6 +76,9 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
               Raffle
             </div>
           </Link>
+
+          {/* Theme Toggle (Desktop & Mobile) */}
+          <ThemeToggle />
 
           {/* Stats Icon (Desktop & Mobile) */}
           <Link href="/stats" className="p-2 rounded-lg hover:bg-slate-800 transition-colors group relative">
