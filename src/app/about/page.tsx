@@ -524,7 +524,7 @@ const sections = [
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">Contract Address</h2>
             <p className="font-mono text-sm text-primary bg-muted/30 p-2 rounded-lg border border-border/50 mt-4">
-              TBD
+              8XC8HGUjfaGGvofjsR6GTLBCt7XJESoJPXWx4N8Yjupx
             </p>
           </div>
 
@@ -533,7 +533,7 @@ const sections = [
             <h2 className="text-lg font-bold mb-3 flex items-center gap-2">Dev Address</h2>
             <p className="text-sm">Collects trading fees to cover development costs and fill prize pools.</p>
             <p className="font-mono text-sm text-primary bg-muted/30 p-2 rounded-lg border border-border/50 mt-4">
-              TBD
+              Eo4DeL8ZEYCQR6WZZq9iPDiTSzr8H39yL7zKDVDdk3Pz
             </p>
           </div>
 
