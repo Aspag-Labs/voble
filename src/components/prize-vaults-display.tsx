@@ -46,11 +46,11 @@ export function PrizeVaultsDisplay() {
     <div className="w-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Prize Pools</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Prize Pools</p>
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="p-1 rounded text-zinc-600 hover:text-zinc-400 transition-colors disabled:opacity-50"
+          className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
         >
           <RefreshCw className={`h-3 w-3 ${isFetching ? 'animate-spin' : ''}`} />
         </button>
@@ -64,18 +64,18 @@ export function PrizeVaultsDisplay() {
           return (
             <div
               key={key}
-              className="flex-1 relative p-3 sm:p-4 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/20"
+              className="flex-1 relative p-3 sm:p-4 rounded-xl bg-muted border border-border"
             >
               {/* Label */}
-              <p className="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-2">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
                 {label}
               </p>
 
               {/* Amount */}
               {isLoading && !DEMO_MODE ? (
-                <div className="h-8 w-16 bg-zinc-800 animate-pulse rounded" />
+                <div className="h-8 w-16 bg-muted animate-pulse rounded" />
               ) : (
-                <p className="text-2xl sm:text-3xl font-black text-[#22c55e] tracking-tight">
+                <p className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
                   ${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               )}

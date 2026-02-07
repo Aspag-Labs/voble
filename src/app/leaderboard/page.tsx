@@ -190,7 +190,8 @@ export default function LeaderboardPage() {
             <span className="font-mono text-white font-bold w-5 text-center">#{rank}</span>
           )
         }
-        return <span className="font-mono text-zinc-400 font-medium w-5 text-center">#{rank}</span>
+        // For ranks > 3, return plain number
+        return <span className="font-mono text-muted-foreground font-medium w-5 text-center">#{rank}</span>
     }
   }
 
@@ -224,9 +225,9 @@ export default function LeaderboardPage() {
   }, [entries, userRank])
 
   return (
-    <div className="min-h-screen bg-[#09090b] pb-24">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header Section */}
-      <div className="bg-[#22c55e]/10 border-b border-[#22c55e]/20">
+      <div className="bg-background border-b border-border">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           {/* Period Tabs */}
           <div className="flex items-center justify-center gap-1 mb-6">
@@ -237,8 +238,8 @@ export default function LeaderboardPage() {
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all',
                   activePeriod === period
-                    ? 'bg-[#22c55e] text-white'
-                    : 'text-zinc-400 hover:text-zinc-200',
+                    ? 'bg-muted text-foreground'
+                    : 'text-muted-foreground hover:text-foreground',
                 )}
               >
                 {period}
@@ -248,29 +249,29 @@ export default function LeaderboardPage() {
 
           {/* Prize Display */}
           <div className="text-center mb-4">
-            <p className="text-zinc-400 text-xs uppercase tracking-widest mb-2">
+            <p className="text-muted-foreground text-xs uppercase tracking-widest mb-2">
               {activePeriod} Prize Pool
             </p>
-            <h1 className="text-5xl md:text-6xl font-black text-[#22c55e] tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-black text-primary tracking-tight">
               ${prizePool.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h1>
           </div>
 
           {/* Stats Row */}
           <div className="flex items-center justify-center gap-6 text-sm">
-            <div className="flex items-center gap-2 text-zinc-400">
+            <div className="flex items-center gap-2 text-muted-foreground">
               <Users className="w-4 h-4" />
               <span className="font-medium">{totalPlayers.toLocaleString()} players</span>
             </div>
-            <div className="w-px h-4 bg-zinc-700" />
-            <div className="flex items-center gap-2 text-zinc-400 font-mono">
+            <div className="w-px h-4 bg-border" />
+            <div className="flex items-center gap-2 text-muted-foreground font-mono">
               <Clock className="w-4 h-4" />
               <span>{timeLeft}</span>
             </div>
             <button
               onClick={handleRefresh}
               disabled={isRefreshing || isRateLimited}
-              className="p-1.5 rounded text-zinc-500 hover:text-white transition-colors disabled:opacity-50"
+              className="p-1.5 rounded text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
             >
               <RotateCw className={cn('w-3.5 h-3.5', isRefreshing && 'animate-spin')} />
             </button>
@@ -279,20 +280,20 @@ export default function LeaderboardPage() {
       </div>
       {/* Leaderboard List */}
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="bg-[#0a0c16e6] rounded-xl border border-zinc-800 overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           {/* Table Header */}
-          <div className="grid grid-cols-12 gap-2 px-4 sm:px-6 py-4 border-b border-zinc-700 bg-[#0a0c16] text-xs font-medium text-zinc-400 uppercase tracking-wider">
+          <div className="grid grid-cols-12 gap-2 px-4 sm:px-6 py-4 border-b border-border bg-muted/50 text-xs font-medium text-muted-foreground uppercase tracking-wider">
             <div className="col-span-6 sm:col-span-5">Player</div>
             <div className="col-span-3 sm:col-span-4 text-right">Score</div>
             <div className="col-span-3 text-right">Prize</div>
           </div>
 
           {/* Table Body */}
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <div className="divide-y divide-border">
             {isLoading ? (
-              <div className="p-12 text-center text-zinc-500">Loading standings...</div>
+              <div className="p-12 text-center text-muted-foreground">Loading standings...</div>
             ) : entries.length === 0 ? (
-              <div className="p-12 text-center text-zinc-500">No players yet. Be the first!</div>
+              <div className="p-12 text-center text-muted-foreground">No players yet. Be the first!</div>
             ) : (
               entries.map((player, index) => {
                 const prize = getPrizeShare(player.rank)
@@ -333,8 +334,8 @@ export default function LeaderboardPage() {
                         <div className="flex items-center gap-1.5 min-w-0">
                           <span
                             className={cn(
-                              'font-medium text-sm truncate',
-                              playerIsWinner ? 'text-zinc-900 dark:text-white' : 'text-zinc-500 dark:text-zinc-400',
+                              'text-xs sm:text-sm font-medium',
+                              playerIsWinner ? 'text-foreground' : 'text-muted-foreground',
                             )}
                           >
                             {player.username || 'Anonymous'}
@@ -354,13 +355,13 @@ export default function LeaderboardPage() {
                             className={cn(
                               'font-bold tabular-nums',
                               playerIsWinner
-                                ? 'text-base sm:text-lg text-zinc-900 dark:text-white'
-                                : 'text-sm sm:text-base text-zinc-500 dark:text-zinc-400',
+                                ? 'text-base sm:text-lg text-foreground'
+                                : 'text-sm sm:text-base text-muted-foreground',
                             )}
                           >
                             {player.score.toLocaleString()}
                           </span>
-                          <span className="text-[10px] sm:text-xs text-zinc-400">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground">
                             {activePeriod === 'daily' ? (
                               <>
                                 {player.guessesUsed}g{player.timeMs > 0 && ` • ${formatDuration(player.timeMs)}`}
@@ -375,25 +376,25 @@ export default function LeaderboardPage() {
                       {/* Prize */}
                       <div className="col-span-3 flex justify-end items-center">
                         {prize ? (
-                          <div className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#22c55e]/10 border border-[#22c55e]/20">
-                            <span className="font-bold text-sm sm:text-base text-[#22c55e] tabular-nums">
+                          <div className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                            <span className="font-bold text-sm sm:text-base text-primary tabular-nums">
                               ${prize.value.toFixed(2)}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-zinc-500 text-sm">—</span>
+                          <span className="text-muted-foreground text-sm">—</span>
                         )}
                       </div>
                     </div>
 
                     {/* Winner/Non-winner separator */}
                     {showWinnerSeparator && (
-                      <div className="flex items-center gap-4 px-4 sm:px-6 py-3 bg-zinc-100/50 dark:bg-zinc-900/50">
-                        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700" />
-                        <span className="text-[10px] sm:text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider whitespace-nowrap">
+                      <div className="flex items-center gap-4 px-4 sm:px-6 py-3 bg-muted/50">
+                        <div className="flex-1 h-px bg-border" />
+                        <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider whitespace-nowrap">
                           Top {WINNER_COUNTS[activePeriod]} Win Prizes
                         </span>
-                        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700" />
+                        <div className="flex-1 h-px bg-border" />
                       </div>
                     )}
                   </div>

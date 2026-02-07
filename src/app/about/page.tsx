@@ -14,7 +14,7 @@ const sections = [
       heading: 'Intro',
       body: (
         <div className="space-y-4">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Learn about Voble.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Learn about Voble.</p>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-bold mb-2">Overview</h2>
@@ -74,7 +74,7 @@ const sections = [
       heading: 'Tournaments',
       body: (
         <div className="space-y-6">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Learn about tournaments.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Learn about tournaments.</p>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-bold mb-2">One Game, Three Opportunities</h2>
@@ -159,7 +159,7 @@ const sections = [
       heading: 'Scoring',
       body: (
         <div className="space-y-4">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Learn about scoring in Voble.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Learn about scoring in Voble.</p>
 
           <p>
             Your score in Voble is a combination of accuracy and speed. You earn points only when you solve the word.
@@ -306,7 +306,7 @@ const sections = [
       heading: 'Lucky Draw',
       body: (
         <div className="space-y-6">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Learn about the weekly raffle.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Learn about the weekly raffle.</p>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">Automatic Entry</h2>
@@ -366,7 +366,7 @@ const sections = [
       heading: 'Fee Structure',
       body: (
         <div className="space-y-6">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Learn how funds are distributed.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Learn how funds are distributed.</p>
 
           <p>
             Voble is built on a foundation of fairness. Every USDC entered goes into a verifiable on-chain distribution
@@ -441,7 +441,7 @@ const sections = [
       heading: 'Referral Program',
       body: (
         <div className="space-y-6">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Share the game, share the revenue.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Share the game, share the revenue.</p>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">Invite Your Friends, Get Lifetime Bonus!</h2>
@@ -518,7 +518,7 @@ const sections = [
       heading: 'Tokenomics',
       body: (
         <div className="space-y-6">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Learn about the token economy.</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Learn about the token economy.</p>
 
           {/* Contract Address*/}
           <div className="space-y-4">
@@ -603,7 +603,7 @@ const sections = [
       heading: 'Links',
       body: (
         <div className="space-y-6">
-          <p className="text-sm text-[#707070] font-large tracking-wider">Key information and links</p>
+          <p className="text-sm text-muted-foreground font-large tracking-wider">Key information and links</p>
 
           {/* Platform Revenue Address */}
           <div className="space-y-4">
@@ -701,7 +701,7 @@ export default function AboutPage() {
                   {currentSection.content.heading}
                 </h1>
                 <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-                  <div className="text-medium text-[#DDDFE0] leading-relaxed whitespace-pre-line">
+                  <div className="text-medium leading-relaxed whitespace-pre-line">
                     {currentSection.content.body}
                   </div>
                 </div>

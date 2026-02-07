@@ -80,14 +80,14 @@ export function GameLobby({
 
       {/* GAME INITIALIZATION LOADING STATE */}
       {isStartingGame && (
-        <div className="mb-12 py-24 relative overflow-hidden rounded-3xl bg-zinc-900 dark:bg-black text-white shadow-2xl flex flex-col items-center justify-center border border-zinc-800">
+        <div className="mb-12 py-24 relative overflow-hidden rounded-3xl bg-card text-foreground shadow-2xl flex flex-col items-center justify-center border border-border">
           {/* Subtle static gradient with Voble brand blue */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1877F2]/10 via-transparent to-zinc-950/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1877F2]/10 via-transparent to-muted/50" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(24,119,242,0.12)_0%,transparent_60%)]" />
 
           <div className="relative mb-8 z-10">
-            <div className="h-20 w-20 rounded-2xl bg-zinc-800/50 backdrop-blur flex items-center justify-center border border-zinc-700">
-              <Ticket className="w-8 h-8 text-indigo-400" />
+            <div className="h-20 w-20 rounded-2xl bg-muted/50 backdrop-blur flex items-center justify-center border border-border">
+              <Ticket className="w-8 h-8 text-indigo-500 dark:text-indigo-400" />
             </div>
             <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center animate-spin">
               <Loader2 className="w-4 h-4 text-white" />
@@ -95,7 +95,7 @@ export function GameLobby({
           </div>
 
           <h2 className="text-3xl font-black mb-3 tracking-tight z-10">Entering Arena...</h2>
-          <div className="flex flex-col items-center gap-2 text-zinc-400 text-sm z-10 font-mono">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground text-sm z-10 font-mono">
             <p className="flex items-center gap-2">
               {ticketPurchased ? (
                 <CheckCircle className="w-3 h-3 text-green-500" />
@@ -122,17 +122,17 @@ export function GameLobby({
       {/* LOBBY: ENTER ARENA CARD */}
       {/* Condition: !isStartingGame && showEnterArena */}
       {!isStartingGame && showEnterArena && (
-        <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0f] border border-zinc-800">
+        <div className="relative overflow-hidden rounded-2xl bg-card border border-border">
           {/* Scan lines effect */}
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.1)_2px,rgba(0,0,0,0.1)_4px)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.05)_2px,rgba(0,0,0,0.05)_4px)] dark:bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.1)_2px,rgba(0,0,0,0.1)_4px)] pointer-events-none" />
 
           <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 sm:py-20">
 
-            <h2 className="text-4xl sm:text-6xl font-black text-white mb-6 tracking-tighter">
+            <h2 className="text-4xl sm:text-6xl font-black text-foreground mb-6 tracking-tighter">
               Ready to Compete?
             </h2>
 
-            <p className="text-lg text-zinc-400 max-w-md mb-10 leading-relaxed">
+            <p className="text-lg text-muted-foreground max-w-md mb-10 leading-relaxed">
               Test your vocabulary skills on Voble. Solve the word, climb the leaderboard, win the prize.
             </p>
 
